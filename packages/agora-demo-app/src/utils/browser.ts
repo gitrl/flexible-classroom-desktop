@@ -14,7 +14,7 @@ export function checkBrowserDevice(): Platform {
   if (bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM) {
     return 'H5' as Platform.H5;
   }
-  return 'H5' as Platform.PC;
+  return 'PC' as Platform.PC;
 }
 
 export function isH5Browser() {
