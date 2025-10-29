@@ -1,28 +1,25 @@
 <!DOCTYPE html>
 <!-- templates -->
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title></title>
+  <title>Cloud Recording</title>
 </head>
 
 <body>
   <style>
-    #swRoot {
+    #root {
       width: 100%;
       height: 100%;
     }
   </style>
-  <div id="swRoot"></div>
-  <script src="https://oss.dreambigcareer.com/web/SW/flexible-classroom/test/edu_sdk.bundle.js"></script>
-  <script src="https://oss.dreambigcareer.com/web/SW/flexible-classroom/test/edu_widget.bundle.js"></script>
+  <div id="root"></div>
+  <script src="./edu_sdk.bundle.js"></script>
+  <script src="./edu_widget.bundle.js"></script>
 
   <script type="text/javascript">
-    var isFlutterInAppWebViewReady = false;
-    window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
-        isFlutterInAppWebViewReady = true;
-    });
     function useParams(location) {
       const searchString = location.href.split('?').pop();
       const urlParams = new URLSearchParams(location.href.split('?').pop());
@@ -33,6 +30,7 @@
       console.log('urlParams ', audienceParams);
       return audienceParams;
     }
+
     const {
       userUuid,
       userName,
@@ -45,9 +43,9 @@
       rtmToken,
       language,
       startTime,
-      duration=60 * 30,
-      recordUrl="https://oss.dreambigcareer.com/record_page_prod.html",
-      appId ='21d015747d8543f5bc70f182d82eeb94',
+      duration,
+      recordUrl,
+      appId,
       userRole,
       translateLanguage,
       region,
@@ -55,65 +53,63 @@
       maxFPS = 5,
       resolution = 0.8,
     } = useParams(window.location);
+
+    const recordOptions = {
+      minFPS,
+      maxFPS,
+      resolution,
+      autoResolution: false,
+      autoFPS: false,
+      maxResolutionLevel: 1,
+      forceCanvas: true
+    };
+
+    AgoraEduSDK.setParameters(
+      JSON.stringify({
+        host: `https://api-solutions-dev.bj2.agoralab.co`,
+      }),
+    );
     AgoraEduSDK.config({
       appId,
-      region: region ? region : 'AP',
+      cachePath: undefined,
+      region: region ? region : 'CN',
     });
-    const unmount = AgoraEduSDK.launch(document.querySelector('#swRoot'), {
+    AgoraEduSDK.launch(document.querySelector('#root'), {
       userUuid,
       userName,
       roomUuid,
-      roleType: 2,
-      roomType: 2,
+      roleType: Number(roleType),
+      roomType: Number(roomType),
       roomName,
       pretest: false,
+      rtmUid,
       rtmToken,
-      language:'zh',
+      language,
       startTime,
       duration,
       recordUrl,
       appId,
-      uiMode: "dark",
+      userRole,
       courseWareList: [],
-      platform:'H5',
+      recordOptions,
       widgets: {
-          easemobIM: AgoraHXChatWidget, // IM widget
-          mediaPlayer: FcrStreamMediaPlayerWidget, // 视频同步播放器widget
-          poll: AgoraPolling, // 投票器widget
-          watermark: FcrWatermarkWidget, // 水印widget
-          webView: FcrWebviewWidget, // 内嵌浏览器widget
-          netlessBoard: FcrBoardWidget, // 互动白板widget
-          im:AgoraHXChatWidget
+        popupQuiz: AgoraSelector,
+        countdownTimer: AgoraCountdown,
+        easemobIM: AgoraHXChatWidget,
+        mediaPlayer: FcrStreamMediaPlayerWidget,
+        poll: AgoraPolling,
+        watermark: FcrWatermarkWidget,
+        webView: FcrWebviewWidget,
+        netlessBoard: FcrBoardWidget,
       },
       listener: (evt, args) => {
-        // do something when classroom is connected
-        if (evt === 202 && args=== 3){//关闭灵动课堂 
-          if (isFlutterInAppWebViewReady) {
-            window.flutter_inappwebview.callHandler('endRoom');
-          }
+        console.log('connected to classroom', evt, args);
+        if (evt === 1) {
+          // do something when classroom is connected
+          AgoraEduSDK.setRecordReady();
         }
-        else if (evt === 1) {
-          if (isFlutterInAppWebViewReady) {
-            window.flutter_inappwebview.callHandler('enterRoom');
-          }
-        } else if (evt === 3) {
-          if (isFlutterInAppWebViewReady) {
-            window.flutter_inappwebview.callHandler('enterFail');
-          }
-        }else if (evt === 2){//关闭灵动课堂 
-          if (isFlutterInAppWebViewReady) {
-            window.flutter_inappwebview.callHandler('closeRoom');
-            unmount()
-          }
-        }
-       
       },
     });
-    // 点返回按钮，和closeRoom时会调用exitRoom，学员离开时可以实时看到
-    window.addEventListener("exitRoom", (event) => {
-       unmount()
-    }, false);
-    
   </script>
 
 </body>

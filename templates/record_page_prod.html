@@ -10,14 +10,14 @@
 
 <body>
   <style>
-    #swRoot {
+    #root {
       width: 100%;
       height: 100%;
     }
   </style>
-  <div id="swRoot"></div>
-  <script src="https://oss.dreambigcareer.com/web/SW/flexible-classroom/prod/edu_sdk.bundle.js"></script>
-  <script src="https://oss.dreambigcareer.com/web/SW/flexible-classroom/prod/edu_widget.bundle.js"></script>
+  <div id="root"></div>
+  <script src="./edu_sdk.bundle.js"></script>
+  <script src="./edu_widget.bundle.js"></script>
 
   <script type="text/javascript">
     function useParams(location) {
@@ -69,7 +69,7 @@
       cachePath: undefined,
       region: region ? region : 'CN',
     });
-    AgoraEduSDK.launch(document.querySelector('#swRoot'), {
+    AgoraEduSDK.launch(document.querySelector('#root'), {
       userUuid,
       userName,
       roomUuid,
@@ -79,17 +79,16 @@
       pretest: false,
       rtmUid,
       rtmToken,
-      language:'zh',
+      language,
       startTime,
       duration,
       recordUrl,
       appId,
       userRole,
-      uiMode: "dark",
       courseWareList: [],
       recordOptions,
       widgets: {
-        // popupQuiz: AgoraSelector,
+        popupQuiz: AgoraSelector,
         countdownTimer: AgoraCountdown,
         easemobIM: AgoraHXChatWidget,
         mediaPlayer: FcrStreamMediaPlayerWidget,
