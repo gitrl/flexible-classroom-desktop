@@ -37,3 +37,26 @@ yarn pack:electron:mac
 |----|--------|
 |ELECTRON_MIRROR|https://npmmirror.com/mirrors/electron/|
 |ELECTRON_CUSTOM_DIR|v12.0.0|
+
+
+
+# 安装项目依赖
+```bash
+yarn install:packages
+```
+
+# 以开发模式运行项目
+```bash
+yarn dev:classroom
+```
+
+## 打包灵动课堂 SDK
+```bash
+yarn pack:classroom:sdk
+```
+# 打包 SDK 插件包
+```bash
+yarn pack:classroom:plugin
+```
+
+## 打包完成的 SDK JS 文件会输出至 packages/agora-classroom-sdk/lib/edu_sdk.bundle.js，插件包 JS 文件会输出至 packages/agora-plugin-gallery/lib/edu_widget.bundle.js。

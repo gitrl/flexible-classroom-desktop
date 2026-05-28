@@ -50,7 +50,7 @@ export const getRegion = (): EduRegion => {
 };
 
 export const getTheme = (): FcrMultiThemeMode => {
-  return getLSStore(LS_THEME) || FcrMultiThemeMode.light;
+  return getLSStore(LS_THEME) || FcrMultiThemeMode.dark;
 };
 
 export class GlobalStore {
